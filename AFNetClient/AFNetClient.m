@@ -304,9 +304,8 @@ static AFNetClient *client;
             
         }
         
-        NSAssert(afnetClientRequest.downLoadFilePath == nil, @"文件下载路径不能为空");
         NSURL *documentsDirectoryURL = [NSURL URLWithString:afnetClientRequest.downLoadFilePath];
-        return [documentsDirectoryURL URLByAppendingPathComponent:[response suggestedFilename]];
+        return [documentsDirectoryURL URLByAppendingPathComponent:[response.URL lastPathComponent]];
 
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
     {
