@@ -62,7 +62,7 @@ typedef enum
     
     CC_DOWN_UN_KNOW = -1,
     CC_UOLOAD_UN_KNOW = -2,
-}REQUEST_CMD_CODE;
+}AFREQUEST_CMD_CODE;
 
 //所有网络的请求实体类必须实现该接口
 @protocol AFNetClientEntityInterface <NSObject,NSSecureCoding>
@@ -85,7 +85,7 @@ typedef enum
  *
  *  @since 1.0
  */
-- (void)afnetClientDownlaodProgress:(REQUEST_CMD_CODE)comdCode;
+- (void)afnetClientDownlaodProgress:(AFREQUEST_CMD_CODE)comdCode;
 
 @end
 

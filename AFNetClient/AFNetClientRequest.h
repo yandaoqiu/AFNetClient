@@ -32,7 +32,7 @@
     NSString *formFilePath;
     
     //请求码
-    REQUEST_CMD_CODE cmdcode;
+    AFREQUEST_CMD_CODE cmdcode;
 }
 @property (nonatomic,strong)NSString *url;
 @property (nonatomic)       Request_type requestType;
@@ -44,5 +44,5 @@
 @property (nonatomic,strong)NSString *formName;
 @property (nonatomic,strong)NSString *formFileName;
 @property (nonatomic,strong)NSString *formFilePath;
-@property (nonatomic)       REQUEST_CMD_CODE cmdcode;
+@property (nonatomic)       AFREQUEST_CMD_CODE cmdcode;
 @end

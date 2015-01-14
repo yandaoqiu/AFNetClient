@@ -111,24 +111,74 @@ static AFNetClient *client;
             if (afnetClientRequest.formKeyValue && afnetClientRequest.formFileName && afnetClientRequest.formMimeType && afnetClientRequest.formName && afnetClientRequest.formFilePath)
             {
                 dataTask = [self.httpSessionManager POST:afnetClientRequest.url
-                                          parameters:afnetClientRequest.parameters
-                           constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
-                        {
-                            NSString *key = [afnetClientRequest.formKeyValue.allKeys lastObject];
-                            [formData appendPartWithFormData:[[afnetClientRequest.formKeyValue objectForKey:key] dataUsingEncoding:NSUTF8StringEncoding]
-                                                        name:key];
-                            [formData appendPartWithFileData:[NSData dataWithContentsOfFile:afnetClientRequest.formFilePath]
-                                                        name:afnetClientRequest.formName
-                                                    fileName:afnetClientRequest.formFileName mimeType:afnetClientRequest.formMimeType];
-                        }
-                        success:^(NSURLSessionDataTask *task, id responseObject)
+                                              parameters:afnetClientRequest.parameters
+                               constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
+                            {
+                                NSString *key = [afnetClientRequest.formKeyValue.allKeys lastObject];
+                                [formData appendPartWithFormData:[[afnetClientRequest.formKeyValue objectForKey:key] dataUsingEncoding:NSUTF8StringEncoding]
+                                                            name:key];
+                                [formData appendPartWithFileData:[NSData dataWithContentsOfFile:afnetClientRequest.formFilePath]
+                                                            name:afnetClientRequest.formName
+                                                        fileName:afnetClientRequest.formFileName mimeType:afnetClientRequest.formMimeType];
+                            }
+                                                 success:^(NSURLSessionDataTask *task, id responseObject)
+                            {
+                                if (block)
+                                {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        block(task,responseObject,nil);
+                                    });
+                                    
+                                }
+                                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                            } failure:^(NSURLSessionDataTask *task, NSError *error)
+                            {
+                                if (block)
+                                {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        block(task,nil,error);
+                                    });
+                                }
+                                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                            }];
+            }
+            else
+            {
+                dataTask = [self.httpSessionManager POST:afnetClientRequest.url
+                                              parameters:afnetClientRequest.parameters
+                                                 success:^(NSURLSessionDataTask *task, id responseObject)
+                            {
+                                if (block)
+                                {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        block(task,responseObject,nil);
+                                    });
+                                }
+                                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                                
+                            } failure:^(NSURLSessionDataTask *task, NSError *error)
+                            {
+                                if (block)
+                                {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        block(task,nil,error);
+                                    });
+                                }
+                                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                            }];
+                
+            }
+            break;
+        }
+        case Type_get:
+        {
+            dataTask = [self.httpSessionManager GET:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
                         {
                             if (block)
                             {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     block(task,responseObject,nil);
                                 });
-
                             }
                             [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
                         } failure:^(NSURLSessionDataTask *task, NSError *error)
@@ -141,12 +191,35 @@ static AFNetClient *client;
                             }
                             [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
                         }];
-            }
-            else
-            {
-                dataTask = [self.httpSessionManager POST:afnetClientRequest.url
-                                          parameters:afnetClientRequest.parameters
-                                             success:^(NSURLSessionDataTask *task, id responseObject)
+            break;
+        }
+        case Type_put:
+        {
+            
+            dataTask = [self.httpSessionManager PUT:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,responseObject,nil);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        } failure:^(NSURLSessionDataTask *task, NSError *error)
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,nil,error);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        }];
+            break;
+        }
+        case Type_delete:
+        {
+            dataTask = [self.httpSessionManager DELETE:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
                         {
                             if (block)
                             {
@@ -166,125 +239,52 @@ static AFNetClient *client;
                             }
                             [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
                         }];
-                
-            }
-            break;
-        }
-        case Type_get:
-        {
-          dataTask = [self.httpSessionManager GET:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,responseObject,nil);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            } failure:^(NSURLSessionDataTask *task, NSError *error)
-             {
-                 if (block)
-                 {
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         block(task,nil,error);
-                     });
-                 }
-                 [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            }];
-            break;
-        }
-        case Type_put:
-        {
-            
-           dataTask = [self.httpSessionManager PUT:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,responseObject,nil);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            } failure:^(NSURLSessionDataTask *task, NSError *error)
-             {
-                 if (block)
-                 {
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         block(task,nil,error);
-                     });
-                 }
-                 [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            }];
-            break;
-        }
-        case Type_delete:
-        {
-           dataTask = [self.httpSessionManager DELETE:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,responseObject,nil);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-                
-            } failure:^(NSURLSessionDataTask *task, NSError *error)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,nil,error);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            }];
             break;
         }
         case Type_head:
         {
-           dataTask = [self.httpSessionManager HEAD:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,nil,nil);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            } failure:^(NSURLSessionDataTask *task, NSError *error)
-             {
-                 if (block)
-                 {
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         block(task,nil,error);
-                     });
-                 }
-                 [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            }];
+            dataTask = [self.httpSessionManager HEAD:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task)
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,nil,nil);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        } failure:^(NSURLSessionDataTask *task, NSError *error)
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,nil,error);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        }];
             break;
         }
         case Type_patch:
         {
             dataTask = [self.httpSessionManager PATCH:afnetClientRequest.url parameters:afnetClientRequest.parameters success:^(NSURLSessionDataTask *task, id responseObject)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,responseObject,nil);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            } failure:^(NSURLSessionDataTask *task, NSError *error)
-            {
-                if (block)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        block(task,nil,error);
-                    });
-                }
-                [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-            }];
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,responseObject,nil);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        } failure:^(NSURLSessionDataTask *task, NSError *error)
+                        {
+                            if (block)
+                            {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    block(task,nil,error);
+                                });
+                            }
+                            [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                        }];
             break;
         }
     }
@@ -297,36 +297,44 @@ static AFNetClient *client;
 {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:afnetClientRequest.url]];
     NSProgress *progress = afnetClientRequest.progress;
+    __strong typeof(NSProgress*) strongProgress = progress;
+    //检查目录是否存在
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:afnetClientRequest.downLoadFilePath isDirectory:nil];
+    if (!existed)
+    {
+        [fileManager createDirectoryAtPath:afnetClientRequest.downLoadFilePath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
     NSURLSessionDownloadTask *task = [self.httpSessionManager downloadTaskWithRequest:request progress:&progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response)
-    {
-        if (targetPath)
-        {
-            
-        }
-        
-        NSURL *documentsDirectoryURL = [NSURL URLWithString:afnetClientRequest.downLoadFilePath];
-        return [documentsDirectoryURL URLByAppendingPathComponent:[response.URL lastPathComponent]];
-
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
-    {
-        //下载成功
-        //移除监听
-        [progress removeObserver:self
-                      forKeyPath:kDownLoadProgress_KVO
-                         context:NULL];
-        if (block)
-        {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                block(response,filePath,error);
-            });
-        }
-        [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-    }];
-
+                                      {
+                                          if (targetPath)
+                                          {
+                                              
+                                          }
+                                          NSURL *documentsDirectoryURL = [NSURL URLWithString:afnetClientRequest.downLoadFilePath];
+                                          return [documentsDirectoryURL URLByAppendingPathComponent:[response.URL lastPathComponent]];
+                                          
+                                      } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
+                                      {
+                                          //下载成功
+                                          //移除监听
+                                          [strongProgress removeObserver:self
+                                                              forKeyPath:kDownLoadProgress_KVO
+                                                                 context:NULL];
+                                          if (block)
+                                          {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  block(response,filePath,error);
+                                              });
+                                          }
+                                          [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+                                      }];
+    
     // 下载进度监听
     // 设置这个progress的唯一标示符（文件存储目录）
-    [progress setUserInfoObject:[NSNumber numberWithInt:afnetClientRequest.cmdcode] forKey:kDownLoadProgress_KVO_KEY];
-    [progress addObserver:self forKeyPath:kDownLoadProgress_KVO options:NSKeyValueObservingOptionNew context:nil];
+    [strongProgress setUserInfoObject:[NSNumber numberWithInt:afnetClientRequest.cmdcode] forKey:kDownLoadProgress_KVO_KEY];
+    [strongProgress addObserver:self forKeyPath:kDownLoadProgress_KVO options:NSKeyValueObservingOptionNew context:nil];
     
     [task resume];
     
@@ -342,7 +350,7 @@ static AFNetClient *client;
     }
 }
 
-- (void)cancelRequest:(REQUEST_CMD_CODE)cmdcode
+- (void)cancelRequest:(AFREQUEST_CMD_CODE)cmdcode
 {
     NSURLSessionTask *task = (NSURLSessionTask*)[self.requestTasks objectForKey:[NSNumber numberWithInt:cmdcode]];
     if (task)

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>12633BE3-5AAA-411A-8CA1-B3D15C6C194D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>AFNetClient</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D7EBB6F7BAB0E4831111E10911E4E013D2C939E3</key>
+		<string>https://github.com/yandaoqiu/AFNetClient.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>AFNetClient.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D7EBB6F7BAB0E4831111E10911E4E013D2C939E3</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/yandaoqiu/AFNetClient.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D7EBB6F7BAB0E4831111E10911E4E013D2C939E3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D7EBB6F7BAB0E4831111E10911E4E013D2C939E3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AFNetClient</string>
+		</dict>
+	</array>
+</dict>
+</plist>

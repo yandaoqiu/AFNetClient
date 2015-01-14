@@ -64,7 +64,7 @@
  *
  *  @since 1.0
  */
-- (void)cancelRequest:(REQUEST_CMD_CODE)cmdcode;
+- (void)cancelRequest:(AFREQUEST_CMD_CODE)cmdcode;
 
 
 
