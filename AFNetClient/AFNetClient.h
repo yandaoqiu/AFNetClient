@@ -41,7 +41,7 @@
  *
  *  @since 1.0
  */
-- (void)download:(AFNetClientDownloadRequest*)afnetClientRequest withBlock:(void (^)(NSURLResponse *res, NSURL *fp ,NSError *))block;
+- (void)download:(AFNetClientDownloadRequest*)afnetClientRequest withBlock:(void (^)(NSURLResponse *res, NSURL *fp ,NSError *error))block;
 
 
 

@@ -293,43 +293,42 @@ static AFNetClient *client;
 
 
 #pragma mark - 文件下载
-- (void)download:(AFNetClientDownloadRequest *)afnetClientRequest withBlock:(void (^)(NSURLResponse *res, NSURL *fp ,NSError *))block
+- (void)download:(AFNetClientDownloadRequest *)afnetClientRequest withBlock:(void (^)(NSURLResponse *res, NSURL *fp ,NSError *error))block
 {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:afnetClientRequest.url]];
     NSProgress *progress = afnetClientRequest.progress;
-    __strong typeof(NSProgress*) strongProgress = progress;
-    //检查目录是否存在
+    __strong __typeof(progress)strongProgress = progress;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL existed = [fileManager fileExistsAtPath:afnetClientRequest.downLoadFilePath isDirectory:nil];
     if (!existed)
     {
         [fileManager createDirectoryAtPath:afnetClientRequest.downLoadFilePath withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    
     NSURLSessionDownloadTask *task = [self.httpSessionManager downloadTaskWithRequest:request progress:&progress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response)
-                                      {
-                                          if (targetPath)
-                                          {
-                                              
-                                          }
-                                          NSURL *documentsDirectoryURL = [NSURL URLWithString:afnetClientRequest.downLoadFilePath];
-                                          return [documentsDirectoryURL URLByAppendingPathComponent:[response.URL lastPathComponent]];
-                                          
-                                      } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
-                                      {
-                                          //下载成功
-                                          //移除监听
-                                          [strongProgress removeObserver:self
-                                                              forKeyPath:kDownLoadProgress_KVO
-                                                                 context:NULL];
-                                          if (block)
-                                          {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  block(response,filePath,error);
-                                              });
-                                          }
-                                          [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
-                                      }];
+      {
+          if (targetPath)
+          {
+          }
+          
+          NSURL *documentsDirectoryPath = [NSURL fileURLWithPath:afnetClientRequest.downLoadFilePath];
+          
+          return [documentsDirectoryPath URLByAppendingPathComponent:[response.URL lastPathComponent]];
+          
+      } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error)
+      {
+          //下载成功
+          //移除监听
+          [strongProgress removeObserver:self
+                              forKeyPath:kDownLoadProgress_KVO
+                                 context:NULL];
+          if (block)
+          {
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  block(response,filePath,error);
+              });
+          }
+          [self.requestTasks removeObjectForKey:[NSNumber numberWithInt:afnetClientRequest.cmdcode]];
+      }];
     
     // 下载进度监听
     // 设置这个progress的唯一标示符（文件存储目录）
