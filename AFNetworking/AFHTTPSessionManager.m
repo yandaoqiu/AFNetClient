@@ -152,6 +152,17 @@
 
     return dataTask;
 }
+- (NSURLSessionDataTask *)POST:(NSString *)URLString
+                   contentType:(NSString *)contentType
+                    parameters:(id)parameters
+                       success:(void (^)(NSURLSessionDataTask *, id))success failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+{
+    NSURLSessionDataTask *dataTask = [self dataTaskWithHTTPMethod:@"POST" URLString:URLString parameters:parameters withContentType:contentType success:success failure:failure];
+    
+    [dataTask resume];
+    
+    return dataTask;
+}
 
 - (NSURLSessionDataTask *)POST:(NSString *)URLString
                     parameters:(id)parameters
@@ -224,6 +235,55 @@
 
     [dataTask resume];
 
+    return dataTask;
+}
+
+- (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
+                                       URLString:(NSString *)URLString
+                                      parameters:(id)parameters
+                                 withContentType:(NSString *)contentType
+                                         success:(void (^)(NSURLSessionDataTask *, id))success
+                                         failure:(void (^)(NSURLSessionDataTask *, NSError *))failure
+{
+    NSError *serializationError = nil;
+    NSMutableURLRequest *request = nil;
+    if(!self.baseURL || self.baseURL.scheme.length == 0)
+    {
+        request = [self.requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:&serializationError];
+    }
+    else
+    {
+        request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
+    }
+    [request setValue:contentType == nil ? @"application/x-www-form-urlencoded":contentType forHTTPHeaderField:@"Content-Type"];
+    request.timeoutInterval = kHttp_Timout > 0 ? kHttp_Timout : 60;
+    
+    if (serializationError) {
+        if (failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu"
+            dispatch_async(self.completionQueue ?: dispatch_get_main_queue(), ^{
+                failure(nil, serializationError);
+            });
+#pragma clang diagnostic pop
+        }
+        
+        return nil;
+    }
+    
+    __block NSURLSessionDataTask *dataTask = nil;
+    dataTask = [self dataTaskWithRequest:request completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
+        if (error) {
+            if (failure) {
+                failure(dataTask, error);
+            }
+        } else {
+            if (success) {
+                success(dataTask, responseObject);
+            }
+        }
+    }];
+    
     return dataTask;
 }
 

@@ -466,14 +466,19 @@ forHTTPHeaderField:(NSString *)field
                     break;
             }
         }
-
+        
         if ([self.HTTPMethodsEncodingParametersInURI containsObject:[[request HTTPMethod] uppercaseString]]) {
             mutableRequest.URL = [NSURL URLWithString:[[mutableRequest.URL absoluteString] stringByAppendingFormat:mutableRequest.URL.query ? @"&%@" : @"?%@", query]];
         } else {
             if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
                 [mutableRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             }
-            [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
+            //传递json
+            SBJsonWriter *writer = [[SBJsonWriter alloc] init];
+            NSString *dataString  = [writer stringWithObject:parameters];
+            NSData *requestData = [[NSData alloc]initWithBytes:[dataString UTF8String] length:strlen([dataString UTF8String])];
+            [mutableRequest setHTTPBody:requestData];
+//            [mutableRequest setHTTPBody:[query dataUsingEncoding:self.stringEncoding]];
         }
     }
 

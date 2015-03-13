@@ -20,11 +20,23 @@
 @synthesize formFileName;
 @synthesize formFilePath;
 @synthesize cmdcode;
+@synthesize contentType;
+
+- (instancetype)init
+{
+    if (self = [super init])
+    {
+        contentType = kContentTypeJson;
+    }
+    return self;
+}
+
 - (instancetype)initWithParamenters:(NSDictionary*)p
 {
     if (self = [super init])
     {
         parameters = [NSDictionary dictionaryWithDictionary:p];
+        contentType = kContentTypeJson;
     }
     return self;
 }

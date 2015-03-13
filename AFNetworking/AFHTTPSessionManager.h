@@ -170,6 +170,12 @@
                        success:(void (^)(NSURLSessionDataTask *task))success
                        failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
 
+- (NSURLSessionDataTask *)POST:(NSString *)URLString
+                   contentType:(NSString *)contentType
+                    parameters:(id)parameters
+                       success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
+                       failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure;
+
 /**
  Creates and runs an `NSURLSessionDataTask` with a `POST` request.
 

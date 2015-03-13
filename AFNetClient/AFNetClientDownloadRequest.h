@@ -10,15 +10,19 @@
 
 @interface AFNetClientDownloadRequest : AFNetClientRequest
 {
-    //起始点
+    //起始点 (废弃)
     NSProgress *progress;
     
+    //是否支持断点下载 (默认打开的)
+    BOOL contiuDownlaod;
+    
     //文件下载路径
-    NSString *downLoadFilePath;
+    NSString *downLoadFilePath;//默认是tmp
     
     
 }
 @property (nonatomic,strong)NSProgress *progress;
+@property (nonatomic,assign)BOOL contiuDownlaod;
 @property (nonatomic,strong)NSString *downLoadFilePath;
 
 @end

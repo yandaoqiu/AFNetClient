@@ -32,6 +32,11 @@
 /// @name Getting HTTP URL Connection Information
 ///------------------------------------------------
 
+
+@property (nonatomic)unsigned long long downSize;
+
+@property (nonatomic,strong)NSString *downLoadFilepath;
+
 /**
  The last HTTP response received by the operation's connection.
  */

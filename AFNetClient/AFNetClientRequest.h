@@ -30,6 +30,8 @@
     NSString *formFileName;
     //xxx/xxx/img.jpg
     NSString *formFilePath;
+    //head contentType (默认是application/json)
+    NSString *contentType;
     
     //请求码
     AFREQUEST_CMD_CODE cmdcode;
@@ -45,4 +47,5 @@
 @property (nonatomic,strong)NSString *formFileName;
 @property (nonatomic,strong)NSString *formFilePath;
 @property (nonatomic)       AFREQUEST_CMD_CODE cmdcode;
+@property (nonatomic,strong)NSString *contentType;
 @end

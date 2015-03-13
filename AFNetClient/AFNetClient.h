@@ -31,6 +31,7 @@
  */
 - (void)request:(AFNetClientRequest*)afnetClientRequest withBlock:(void (^)(NSURLSessionDataTask *task,id obj,NSError*error))block;
 
+
 /*!
  *  @author 严道秋, 15-01-12 17:01:38
  *
@@ -43,6 +44,48 @@
  */
 - (void)download:(AFNetClientDownloadRequest*)afnetClientRequest withBlock:(void (^)(NSURLResponse *res, NSURL *fp ,NSError *error))block;
 
+
+
+/*!
+ *  @author 严道秋, 15-01-23 14:01:01
+ *
+ *  @brief  断点下载
+ *
+ *  @param request       下载请求
+ *  @param progressBlock 进度回调
+ *  @param completeBlock 完成回调
+ *  @param failureBlock  失败回调
+ *
+ *  @since 2.0
+ */
+- (void)downloadFile:(AFNetClientDownloadRequest*)request
+    withProgressBlock:(void (^)(float progress))progressBlock
+    withCompletBlock:(void (^)())completeBlock
+             failure:(void (^)(NSError *error))failureBlock;
+
+
+/*!
+ *  @author 严道秋, 15-01-23 14:01:17
+ *
+ *  @brief  暂停下载
+ *
+ *  @param cmdeCode 请求码
+ *
+ *  @since 1.0
+ */
+- (void)pauseDownloadFile:(AFREQUEST_CMD_CODE)cmdCode;
+
+
+/*!
+ *  @author 严道秋, 15-01-23 14:01:14
+ *
+ *  @brief  继续下载
+ *
+ *  @param cmdCode 请求码
+ *
+ *  @since 1.0
+ */
+- (void)contiuDownloadFile:(AFREQUEST_CMD_CODE)cmdCode;
 
 
 /*!

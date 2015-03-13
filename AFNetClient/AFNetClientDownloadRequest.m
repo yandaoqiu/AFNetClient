@@ -12,27 +12,41 @@
 
 @synthesize downLoadFilePath;
 @synthesize progress;
-
+@synthesize contiuDownlaod;
 
 
 
 - (instancetype)init
 {
-    return [self initWithUnitCount:0];
+    if (self = [super init])
+    {
+        NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *cachePath = [cachePaths objectAtIndex:0];
+        downLoadFilePath = cachePath;
+        NSProgress *tmpProgress = [NSProgress progressWithTotalUnitCount:0];
+        self.progress = tmpProgress;
+        contiuDownlaod = YES;
+    }
+    return self;
 }
 
 
 - (instancetype)initWithUnitCount:(int64_t)unitCount
 {
-    if (self = [self init])
+    if (self = [super init])
     {
         NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *cachePath = [cachePaths objectAtIndex:0];
         downLoadFilePath = cachePath;
-        progress = [NSProgress progressWithTotalUnitCount:unitCount];
+        NSProgress *tmpProgress = [NSProgress progressWithTotalUnitCount:unitCount];
+        self.progress = tmpProgress;
+        contiuDownlaod = YES;
     }
     return self;
 }
+
+
+
 
 
 

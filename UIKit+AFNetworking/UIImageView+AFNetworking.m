@@ -171,7 +171,12 @@
             ImageToDiskCache *diskCache = [[ImageToDiskCache alloc] init];
             //判断物理缓存是否有
             NSString *urlString = [[urlRequest URL] absoluteString];
-            NSData *imageData = [diskCache loadImageData:kImageCachePath withImageName:[diskCache stringTomd5:urlString]];
+            NSData *imageData = nil;
+            if (urlString != nil)
+            {
+                imageData = [diskCache loadImageData:kImageCachePath withImageName:[diskCache stringTomd5:urlString]];
+            }
+           
             if (imageData)
             {
                 self.image = [UIImage imageWithData:imageData];
